@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="style.css" rel="stylesheet">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script defer src="client.js"></script>
+</head>
+
+<body>
+    <header>
+        <section>
+            <h1>Pokój:
+                <%= roomName %>
+            </h1>
+        </section>
+        <section>
+            EJS HERE
+        </section>
+    </header>
+    <main>
+        <div id="msgCont">
+        </div>
+        <form action="#" method="post" id="msgForm">
+            <input required type="text" name="roomName" id="roomName">
+            <input type="submit" value="OK" id="submitRoom">
+        </form>
+    </main>
+
+</body>
+
+</html>
