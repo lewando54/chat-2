@@ -113,21 +113,26 @@ io.on('connection', socket => {
     })
 
     socket.on('user-join', (roomName, user) => {
+        socket.join(roomName)
         con.query(`INSERT INTO tmsgs(id_autor, id_room, tresc) VALUES( (SELECT user_id FROM tusers WHERE login='${user}'), (SELECT room_id FROM trooms WHERE room_name='${roomName}'), '${user} dołączył do czatu!')`)
     })
 
     socket.on('new-msg', (roomName, user, msg) => {
         con.query(`INSERT INTO tmsgs(id_autor, id_room, tresc) VALUES( (SELECT user_id FROM tusers WHERE login='${user}'), (SELECT room_id FROM trooms WHERE room_name='${roomName}'), '${msg}')`)
-        con.query(`SELECT * FROM tmsgs WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') ORDER BY msg_id DESC LIMIT 20`,(err, result) => {
-            io.emit("msgs-update-client", result)
+        con.query(`SELECT * FROM (SELECT * FROM tmsgs WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') ORDER BY msg_id DESC LIMIT 20)Var1 ORDER BY msg_id ASC`,(err, result) => {
+            io.in(roomName).emit("msgs-update-client", result)
         })
     })
 
     socket.on('msgs-update', (roomName) => {
-        con.query(`SELECT * FROM tmsgs WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') ORDER BY msg_id DESC LIMIT 20`, (err, result) => {
-            io.emit('msgs-update-client', result)
+        con.query(`SELECT * FROM (SELECT * FROM tmsgs WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') ORDER BY msg_id DESC LIMIT 20)Var1 ORDER BY msg_id ASC`, (err, result) => {
+            io.in(roomName).emit("msgs-update-client", result);
         })
     })
+
+    socket.on("disconnect", () => {
+        
+    });
 })
 
 //żądania http i odpowiedzi

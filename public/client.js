@@ -55,9 +55,8 @@ if (roomCont != undefined) {
 }
 
 if (msgCont != undefined) {
-    updateMsgs()
     socket.emit('user-join', roomName.innerHTML, userName.innerHTML)
-    console.log('Test')
+    updateMsgs()
     msgForm.addEventListener('submit', e => {
         e.preventDefault()
         socket.emit("new-msg", roomName.innerHTML, userName.innerHTML, msgTresc.value)
