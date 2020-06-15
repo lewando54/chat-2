@@ -14,13 +14,16 @@
     <header>
         <section>
             <h1>Pokój:
-                <%= roomName %>
+                <span id="roomName"><%= roomName %></span>
             </h1>
         </section>
-        <nav>
+        <section>
             <p>
-                Zalogowany jako <%= user %>
+                Zalogowany jako <span id="userName"><%= user %></span>
             </p>
+        </section>
+        <nav>
+
             <a href="/logout">Wyloguj</a>
             <a href="/">Strona Główna</a>
         </nav>
@@ -30,7 +33,7 @@
         </div>
         <form action="#" method="post" id="msgForm">
             <input required type="text" name="msg" id="msgInput">
-            <input type="submit" value="OK" id="submitMsg">
+            <input type="submit" value="Wyślij" id="submitMsg">
         </form>
     </main>
 

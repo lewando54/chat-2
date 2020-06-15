@@ -2,6 +2,7 @@
 const socket = io()
 
 let prosbaOPokoje
+let prosbaOWiadomosci
 
 //złapane elementy strony głównej
 let roomForm = document.querySelector("#roomForm")
@@ -23,6 +24,9 @@ let regLoginErr = document.querySelector('#login-err')
 //złapane elementy pokoju
 let msgCont = document.querySelector('#msgCont')
 let msgForm = document.querySelector('#msgForm')
+let msgTresc = document.querySelector('#msgInput')
+let roomName = document.querySelector('#roomName')
+let userName = document.querySelector('#userName')
 
 //odświeżenie listy pokoi po wejściu na stronę
 updateRooms()
@@ -50,10 +54,26 @@ if (roomCont != undefined) {
     })
 }
 
-if (msg)
+if (msgCont != undefined) {
+    updateMsgs()
+    socket.emit('user-join', roomName.innerHTML, userName.innerHTML)
+    console.log('Test')
+    msgForm.addEventListener('submit', e => {
+        e.preventDefault()
+        socket.emit("new-msg", roomName.innerHTML, userName.innerHTML, msgTresc.value)
+        msgTresc.value = ''
+    })
+    socket.on('msgs-update-client', data => {
+        msgCont.innerHTML = "" 
+        Object.keys(data).forEach((key) => {
+            var row = data[key];
+            appendMsg(row.tresc);
+        });
+    })
+}
 
 
-//
+//sprawdzanie czy użytkownik istnieje w bazie
 if (regForm != undefined) {
     regEmail.addEventListener('keyup', e => {
         updateUser()
@@ -93,6 +113,16 @@ function appendRoom(roomName) {
 //wysłanie prośby do serwera o pokoje
 function updateRooms() {
     socket.emit('room-update')
+}
+
+function updateMsgs() {
+    socket.emit('msgs-update', roomName.innerHTML)
+}
+
+function appendMsg(msg) {
+    let msgWindow = document.createElement("div");
+    msgWindow.innerHTML = msg;
+    msgCont.appendChild(msgWindow);
 }
 
 function updateUser() {
