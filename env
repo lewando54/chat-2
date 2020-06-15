@@ -1,4 +1,0 @@
-DATABASE_URL=http://localhost
-DATABASE_USER=root
-DATABASE_PASS=root
-DATABASE_DBNAME=chat
