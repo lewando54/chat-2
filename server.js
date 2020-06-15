@@ -24,10 +24,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 //połączenie z mysql
 var con = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: null,
-    database: 'chat'
+    host: process.env.DATABASE_URL,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASS,
+    database: process.env.DATABASE_DBNAME
 })
 
 con.connect(function(err) {
@@ -47,7 +47,7 @@ app.use("/uploads", express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: "lewando54chat",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
