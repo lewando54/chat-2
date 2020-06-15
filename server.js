@@ -1,3 +1,4 @@
+//Konfiguracja serwera
 const express = require('express')
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -16,15 +17,17 @@ const app = express()
 const server = require('http').Server(app)
 const mysql = require('mysql');
 const io = require('socket.io')(server)
+const session = require('express-session')
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
+//połączenie z mysql
 var con = mysql.createConnection({
-    host: process.env.DATABASE_URL,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASS,
-    database: process.env.DATABASE_DBNAME
+    host: 'localhost',
+    user: 'root',
+    password: null,
+    database: 'chat'
 })
 
 con.connect(function(err) {
@@ -32,8 +35,29 @@ con.connect(function(err) {
     console.log("Połączono z mysql")
 })
 
+//zmienne: czy istnieje użytkownik, którego próbujemy zarejestrować i sesji
 let userIstnieje = false
+var sess;
 
+//dalsza konfiguracja
+app.set("views", "./views");
+app.set("view engine", "ejs");
+app.use(express.static("public"));
+app.use("/uploads", express.static("uploads"));
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "lewando54chat",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(function (req, res, next) {
+  res.locals.user = req.session.user;
+  next();
+});
+
+//przechwytywanie żądań socket.io i odpowiedzi
 io.on('connection', socket => {
     socket.on('new-room-update', newRoomName => {
         con.query('SELECT * FROM trooms', (err, result) => {
@@ -63,43 +87,59 @@ io.on('connection', socket => {
     })
 
     socket.on('new-user-update', (email, login) => {
-        con.query(`SELECT * FROM tusers`, (err, result) => {
+        con.query(`SELECT * FROM tusers WHERE login='${login}' OR email='${email}'`, (err, result) => {
             if (err) throw err;
-            Object.keys(result).forEach(key => {
-                var row = result[key]
-                if (row.email === email) {
-                    userIstnieje = true
-                    socket.emit('duplicate', 'Email jest już zajęty!')
-                } else if (row.login === login) {
-                    userIstnieje = true
-                    socket.emit('duplicate', 'Nazwa użytkownika jest zajęta!')
+            if (result.length > 0) {
+                if (result[0].email === email) {
+                    socket.emit('duplicate', 'email')
+                    console.log('email istnieje')
+                } else {
+                    socket.emit('unduplicate', 'email')
+                    console.log("email nieistnieje");
                 }
-            })
+                if (result[0].login === login) {
+                  socket.emit("duplicate", "login");
+                  console.log("login istnieje");
+                } else {
+                  socket.emit("unduplicate", "login");
+                  console.log("login nieistnieje");
+                }
+                if (result[0].login === login && result[0].email == email)
+                  userIstnieje = true;
+            } else {
+                userIstnieje = false;
+            }
         })
     })
 })
 
-app.set('views', './views')
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
-app.use('/uploads', express.static('uploads'))
-app.use(express.urlencoded({ extended: true }))
-
+//żądania http i odpowiedzi
 app.get('/', (req, res) => {
+    sess = req.session
     res.render('index')
 })
 
 app.get('/register', (req, res) => {
+    sess = req.session;
+    if (sess.user != undefined)
+        return res.redirect('/')
     res.render('register')
 })
 
 app.get('/login', (req, res) => {
+    sess = req.session;
+    if (sess.user != undefined)
+        return res.redirect("/");
     res.render('login')
 })
 
-app.post('/register', upload.single('avatar'), (req, res, next) => {
+app.get("/logout", (req, res) => {
+  req.session.destroy()
+  res.redirect("/")
+});
 
-    if (!userIstnieje) {
+app.post('/register', upload.single('avatar'), (req, res) => {
+    if (!userIstnieje && /\b[\w.!#$%&’*+\/=?^`{|}~-]+@[\w-]+(?:\.[\w-]+)\b/.test(req.body.email)) {
         let fileName = 'defaultAvatarL54.png'
         if (req.file != undefined)
             fileName = req.file.originalname
@@ -107,12 +147,40 @@ app.post('/register', upload.single('avatar'), (req, res, next) => {
             if (err) throw err;
         })
     } else {
-        res.redirect(`/register`)
+        return res.redirect(`/register`)
     }
     res.redirect('/login')
 })
 
+app.post('/login', (req, res) => {
+    sess = req.session
+    let istnieje = false
+    con.query(`SELECT * FROM tusers WHERE login='${req.body.login}'`, (err, result) => {
+        if (result.length > 0) {
+            if (result[0].login === req.body.login)
+            {
+                if (!sess.user && req.body.password === result[0].pass)
+                    sess.user = req.body.login
+                else if (req.body.password != result[0].pass) {
+                    sess.destroy();
+                    return res.render("login_failed.ejs")
+                }    
+                else
+                    sess.destroy();
+                return res.redirect('/')
+            }
+            else {
+                return res.redirect('/login')
+            }
+        } else {
+            sess.destroy();
+            res.render('login_failed.ejs')
+        }
+    })
+})
+
 app.get('/:room', (req, res) => {
+    sess = req.session
     con.query('SELECT * FROM trooms', (err, result) => {
         let istnieje = false
         if (err) throw err;
@@ -122,8 +190,10 @@ app.get('/:room', (req, res) => {
                 istnieje = true
             }
         })
-        if (istnieje) {
+        if (istnieje && sess.user != undefined) {
             res.render('room', { roomName: req.params.room })
+        } else if (sess.user === undefined) {
+            return res.redirect('/login')
         } else {
             res.redirect('/')
         }

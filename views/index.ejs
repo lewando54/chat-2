@@ -15,15 +15,12 @@
         <section>
             <h1>Czat Lewando54</h1>
         </section>
-        <%-  include('partials/_login_register.ejs') %>
+        <% if (user === undefined) { %> <%- include('partials/_login_register.ejs') %> <% } else { %> <%- include('partials/_logged.ejs') %> <% } %>
     </header>
     <main>
         <div id="roomCont">
         </div>
-        <form action="#" method="post" id="roomForm">
-            <input required type="text" name="roomName" id="roomName">
-            <input type="submit" value="OK" id="submitRoom">
-        </form>
+        <% if (user != undefined) { %> <%- include('partials/_room_form.ejs') %> <% } %>
     </main>
 
 </body>

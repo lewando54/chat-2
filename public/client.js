@@ -2,30 +2,43 @@
 const socket = io()
 
 let prosbaOPokoje
-let prosbaOUsers
 
 //złapane elementy strony głównej
 let roomForm = document.querySelector("#roomForm")
 let newRoomName = document.querySelector("#roomName")
 let roomCont = document.querySelector('#roomCont')
 
+//złapane elementy logowania
+let logForm = document.querySelector('logForm')
+let logUser = document.querySelector('logLogin')
+let logPass = document.querySelector('logPass')
+
 //złapane elementy rejestracji
 let regForm = document.querySelector('#regForm')
 let regEmail = document.querySelector('#email')
 let regUser = document.querySelector('#login')
+let regEmailErr = document.querySelector('#email-err')
+let regLoginErr = document.querySelector('#login-err')
+
+//złapane elementy pokoju
+let msgCont = document.querySelector('#msgCont')
+let msgForm = document.querySelector('#msgForm')
 
 //odświeżenie listy pokoi po wejściu na stronę
 updateRooms()
 
 //wysłanie prośby do serwera co 1000ms o odświeżenie listy pokoi
-if (roomForm != undefined) {
-    prosbaOPokoje = setInterval(updateRooms, 1000)
+if (roomCont != undefined) {
+    prosbaOPokoje = setInterval(updateRooms, 2000)
 
     //utworzenie nowego pokoju
-    roomForm.addEventListener('submit', e => {
+    if (roomForm != undefined) {
+        roomForm.addEventListener('submit', e => {
         e.preventDefault()
         socket.emit('new-room-update', newRoomName.value)
-    })
+        })
+    }
+    
 
     //aktualizacja listy pokoi z danymi z serwera
     socket.on('update', data => {
@@ -37,14 +50,37 @@ if (roomForm != undefined) {
     })
 }
 
+if (msg)
+
 
 //
-if (regForm != undefined)
-    prosbaOUsers = setInterval(updateUser, 2000)
+if (regForm != undefined) {
+    regEmail.addEventListener('keyup', e => {
+        updateUser()
+    })
 
-//wykrycie tej samej nazwy pokoju przez serwer
+    regUser.addEventListener('keyup', e => {
+        updateUser()
+    })
+}
+
+//wykrycie tej samej nazwy
 socket.on('duplicate', info => {
-    alert(info)
+    if (info === 'email') {
+        regEmailErr.innerHTML = "Ten email jest już zajęty!"
+    } else if (info === 'login') {
+        regLoginErr.innerHTML = "Ta nazwa jest już zajęta!"
+    } else {
+        alert(info)
+    }
+})
+
+socket.on('unduplicate', info => {
+    if (info === 'email') {
+        regEmailErr.innerHTML = ""
+    } else if (info === 'login') {
+        regLoginErr.innerHTML = ""
+    }
 })
 
 //dołączenie nowego pokoju do listy po stronie klienta
@@ -61,4 +97,10 @@ function updateRooms() {
 
 function updateUser() {
     socket.emit('new-user-update', regEmail.value, regUser.value)
+    if (/\b[\w.!#$%&’*+\/=?^`{|}~-]+@[\w-]+(?:\.[\w-]+)\b/.test(regEmail.value) === false) {
+        regEmailErr.innerHTML = 'Niepoprawny adres email!'
+    }
+    else {
+        regEmailErr.innerHTML = "";
+    }
 }

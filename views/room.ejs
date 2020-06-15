@@ -17,16 +17,20 @@
                 <%= roomName %>
             </h1>
         </section>
-        <section>
-            EJS HERE
-        </section>
+        <nav>
+            <p>
+                Zalogowany jako <%= user %>
+            </p>
+            <a href="/logout">Wyloguj</a>
+            <a href="/">Strona Główna</a>
+        </nav>
     </header>
     <main>
         <div id="msgCont">
         </div>
         <form action="#" method="post" id="msgForm">
-            <input required type="text" name="roomName" id="roomName">
-            <input type="submit" value="OK" id="submitRoom">
+            <input required type="text" name="msg" id="msgInput">
+            <input type="submit" value="OK" id="submitMsg">
         </form>
     </main>
 
