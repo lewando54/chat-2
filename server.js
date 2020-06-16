@@ -230,4 +230,4 @@ app.get('/:room', (req, res) => {
     })
 })
 
-server.listen(80)
+server.listen(process.env.PORT || 3000)
