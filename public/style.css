@@ -1,0 +1,290 @@
+html, body{
+    margin: 0;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+header{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    background-color: rgb(84, 90, 94);
+}
+
+h1{
+    white-space: nowrap;
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 5px 5px 10px #292020;
+}
+
+h3{
+    white-space: nowrap;
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 5px 5px 10px #292020;
+}
+
+nav{
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+}
+
+#burger{
+    padding-top: 7px;
+    background-color: blue;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+.line{
+
+    margin-bottom: 7px;
+    margin-left: 7px;
+    margin-right: 7px;
+    width: 40px;
+    height: 7px;
+    background-color: brown;
+}
+
+main{
+    display: flex;
+    height: 100%;
+    background-color: rgb(56, 61, 71);
+    align-items: center;
+    flex-direction: column;
+}
+
+.container{
+    width: 100%;
+    flex-grow: 10;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-width: 100%;
+    background-color: rgb(56, 61, 71);
+}
+
+img{
+    max-width: 40%;
+}
+
+a{
+    color: bisque;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+.msgWindow{
+    padding-left: 40px;
+    padding-right: 40px;
+    margin-bottom: 10px;
+}
+
+.wraptext{
+    max-width: 100%;
+    word-wrap:break-word !important;
+    display: block !important;
+}
+
+.text{
+    text-shadow: 5px 5px 10px #292020;
+}
+
+.autorCont{
+    display: flex;
+    align-items: center;
+}
+
+.menu{
+    text-decoration: none !important;
+    color: white;
+    transition: transform 0.2s, color 0.2s;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-shadow: 5px 5px 10px #292020;
+}
+
+.menu:hover{
+    cursor: pointer;
+    transform: scale(1.2);
+    color:  rgb(122, 176, 192);
+}
+
+.enterRoom{
+    background-color: #445258;
+    padding: 10px;
+    color: rgb(255, 255, 255);
+    transition: background-color 0.2s, color 0.2s;
+    text-decoration: none;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 10px 0 10px 0;
+}
+
+.enterRoom:hover{
+    background-color: rgb(255, 255, 255);
+    color: #292929;
+    text-decoration: none;
+}
+
+.avatar{
+    width: 40px;
+    border-radius: 50px;
+    margin-right: 20px;
+}
+
+.autor{
+    font-weight: bolder;
+}
+
+.roomWindow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid grey;
+}
+
+.creativeForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-grow: 1;
+    background-color: rgb(84, 90, 94);
+}
+
+input{
+    color: white;
+}
+
+input[type="text"]{
+    border: 2px solid white;
+    background-color: rgb(56, 61, 71);
+    height: 30px;
+    font-size: larger;
+}
+
+input[type="password"]{
+    border: 2px solid white;
+    background-color: rgb(56, 61, 71) !important;
+    height: 30px;
+    font-size: larger;
+}
+
+input[type="submit"]{
+    border: 2px solid white;
+    background-color: rgb(56, 61, 71);
+    font-size: larger;
+}
+
+
+#navSeparator{
+    display: flex;
+    justify-content: center;
+    width: 40%;
+    align-items: center;
+}
+
+.userForm{
+    display: flex;
+    flex-direction: column;
+    background-color: #4e5558;
+    padding: 40px;
+}
+
+.formSep{
+    margin-bottom: 20px;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+}
+
+input{display: block;}
+
+label{display: block;}
+
+#logForm>*{
+margin-bottom: 20px;
+}
+
+#msgInput{
+    width: 100%;
+}
+
+#msgInputs{
+    display: flex;
+    width: 80%;
+}
+
+#roomInputs{
+    display: flex;
+    margin-bottom: 19px;
+}
+
+.userDataPage{
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 1000px){
+    header{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav{
+        display: none;
+        position: fixed;
+        top: 67px;
+        width: 100%;
+        background-color: rgb(67, 72, 75);
+    }
+
+    #navSeparator{
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    img{
+        max-width: 100%;
+    }
+
+    #burger{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 1000px) and (orientation: landscape){
+    .creativeForm{
+        min-height: 20%;
+    }
+
+    img{
+        max-width: 50%;
+    }
+}

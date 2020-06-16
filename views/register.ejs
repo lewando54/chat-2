@@ -16,11 +16,11 @@
             <h1>Czat Lewando54</h1>
         </section>
         <nav>
-            <a href="/">Strona Główna</a>
+            <a href="/" class="menu">Strona Główna</a>
         </nav>
     </header>
-    <main>
-        <form action="/register" method="post" id="regForm" enctype="multipart/form-data">
+    <main class="userDataPage">
+        <form action="/register" method="post" id="regForm" enctype="multipart/form-data" class="userForm">
             <div>
                 <label for="email">Email</label>
                 <input required type="text" name="email" id="email">
@@ -31,16 +31,16 @@
                 <input required type="text" name="login" id="login">
                 <p id="login-err"></p>
             </div>
-            <div>
+            <div class="formSep">
                 <label for="password">Hasło</label>
                 <input required type="password" name="password" id="password">
             </div>
-            <div>
+            <div class="formSep">
                 <label for="avatar">Zdj. profilowe</label>
                 <input type="file" name="avatar" id="avatar" accept=".png, .jpeg, .jpg">
                 <div id="avatarPreview"></div>
             </div>
-            <div>
+            <div class="center">
                 <input type="submit" value="Zarejestruj" id="submitReg">
             </div>
         </form>

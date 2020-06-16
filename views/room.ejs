@@ -12,28 +12,33 @@
 
 <body>
     <header>
-        <section>
-            <h1>Pokój:
-                <span id="roomName"><%= roomName %></span>
-            </h1>
-        </section>
-        <section>
-            <p>
+        <div id="navSeparator">
+            <section>
+                <h1>Pokój:
+                    <span id="roomName"><%= roomName %></span>
+                </h1>
+            </section>        
+            <section id="burger">
+                <div id="first-line" class="line"></div>
+                <div id="sec-line" class="line"></div>
+                <div id="thir-line" class="line"></div>
+            </section>
+        </div>
+        <nav>
+            <p class="text">
                 Zalogowany jako <span id="userName"><%= user %></span>
             </p>
-        </section>
-        <nav>
-
-            <a href="/logout">Wyloguj</a>
-            <a href="/">Strona Główna</a>
+            <a href="/" id="disconnect" class="menu">Strona Główna</a>
         </nav>
     </header>
     <main>
-        <div id="msgCont">
+        <div id="msgCont" class="container">
         </div>
-        <form action="#" method="post" id="msgForm">
-            <input required type="text" name="msg" id="msgInput">
-            <input type="submit" value="Wyślij" id="submitMsg">
+        <form action="#" method="post" id="msgForm" class="creativeForm">
+            <div id="msgInputs">
+                <input required type="text" name="msg" id="msgInput" autocomplete="off">
+                <input type="submit" value="Wyślij" id="submitMsg">
+            </div>
         </form>
     </main>
 

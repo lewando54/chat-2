@@ -16,11 +16,11 @@
             <h1>Czat Lewando54</h1>
         </section>
         <nav>
-            <a href="/">Strona Główna</a>
+            <a href="/" class="menu">Strona Główna</a>
         </nav>
     </header>
-    <main>
-        <form action="/login" method="post" id="logForm">
+    <main class="userDataPage">
+        <form action="/login" method="post" id="logForm" class="userForm">
             <div>
                 <label for="login">Nazwa użytkownika</label>
                 <input required type="text" name="login" id="logLogin">
@@ -29,7 +29,7 @@
                 <label for="password">Hasło</label>
                 <input required type="password" name="password" id="logPassword">
             </div>
-            <div>
+            <div class="center">
                 <input type="submit" value="Zaloguj" id="submitLog">
             </div>
         </form>

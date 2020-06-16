@@ -18,7 +18,7 @@
         <% if (user === undefined) { %> <%- include('partials/_login_register.ejs') %> <% } else { %> <%- include('partials/_logged.ejs') %> <% } %>
     </header>
     <main>
-        <div id="roomCont">
+        <div id="roomCont" class="container">
         </div>
         <% if (user != undefined) { %> <%- include('partials/_room_form.ejs') %> <% } %>
     </main>

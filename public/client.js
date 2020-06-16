@@ -2,7 +2,7 @@
 const socket = io()
 
 let prosbaOPokoje
-let prosbaOWiadomosci
+let userUpdate
 
 //złapane elementy strony głównej
 let roomForm = document.querySelector("#roomForm")
@@ -27,12 +27,18 @@ let msgForm = document.querySelector('#msgForm')
 let msgTresc = document.querySelector('#msgInput')
 let roomName = document.querySelector('#roomName')
 let userName = document.querySelector('#userName')
+let disconnect = document.querySelector('#disconnect')
+let burger = document.querySelector('#burger')
+let nav = document.querySelector('nav')
 
 //odświeżenie listy pokoi po wejściu na stronę
 updateRooms()
 
 //wysłanie prośby do serwera co 1000ms o odświeżenie listy pokoi
 if (roomCont != undefined) {
+    nav.style.display = 'flex'
+    nav.style.position = 'relative'
+    nav.style.top = '0'
     prosbaOPokoje = setInterval(updateRooms, 2000)
 
     //utworzenie nowego pokoju
@@ -52,35 +58,49 @@ if (roomCont != undefined) {
             appendRoom(row.room_name)
         })
     })
+} else {
+    clearInterval(prosbaOPokoje)
 }
+
+
 
 if (msgCont != undefined) {
     socket.emit('user-join', roomName.innerHTML, userName.innerHTML)
+
     updateMsgs()
+
     msgForm.addEventListener('submit', e => {
         e.preventDefault()
         socket.emit("new-msg", roomName.innerHTML, userName.innerHTML, msgTresc.value)
         msgTresc.value = ''
     })
+
     socket.on('msgs-update-client', data => {
         msgCont.innerHTML = "" 
         Object.keys(data).forEach((key) => {
             var row = data[key];
-            appendMsg(row.tresc);
+            appendMsg(row.tresc, row.login, row.avatar_url);
         });
+    })
+
+    disconnect.addEventListener('click', e => {
+        socket.emit('user-disconnect', roomName.innerHTML, userName.innerHTML)
+    })
+
+    burger.addEventListener("click", e => {
+        if(nav.style.display === 'none')
+            nav.style.display = 'flex'
+        else
+            nav.style.display = 'none'
     })
 }
 
 
 //sprawdzanie czy użytkownik istnieje w bazie
 if (regForm != undefined) {
-    regEmail.addEventListener('keyup', e => {
-        updateUser()
-    })
-
-    regUser.addEventListener('keyup', e => {
-        updateUser()
-    })
+    userUpdate = setInterval(updateUser, 1000)
+} else {
+    clearInterval(userUpdate)
 }
 
 //wykrycie tej samej nazwy
@@ -89,6 +109,8 @@ socket.on('duplicate', info => {
         regEmailErr.innerHTML = "Ten email jest już zajęty!"
     } else if (info === 'login') {
         regLoginErr.innerHTML = "Ta nazwa jest już zajęta!"
+    } else if (info === 'emailErr') {
+        regLoginErr.innerHTML = "Ta nazwa jest już zajęta!";
     } else {
         alert(info)
     }
@@ -105,7 +127,8 @@ socket.on('unduplicate', info => {
 //dołączenie nowego pokoju do listy po stronie klienta
 function appendRoom(roomName) {
     let roomWindow = document.createElement('div')
-    roomWindow.innerHTML = `<p>${roomName}</p><a href="/${roomName}">Wejdź</a>`
+    roomWindow.setAttribute('class', 'roomWindow')
+    roomWindow.innerHTML = `<p>${roomName}</p><a href="/${roomName}" class="enterRoom">Wejdź</a>`
     roomCont.appendChild(roomWindow)
 }
 
@@ -118,18 +141,49 @@ function updateMsgs() {
     socket.emit('msgs-update', roomName.innerHTML)
 }
 
-function appendMsg(msg) {
-    let msgWindow = document.createElement("div");
-    msgWindow.innerHTML = msg;
-    msgCont.appendChild(msgWindow);
+function appendMsg(msg, autor, avatarURL) {
+    let msgWindow = document.createElement("div")
+    let msgTrescWindow = document.createElement("div")
+    let avatar = document.createElement("img")
+    let autorTag = document.createElement("p")
+    let autorCont = document.createElement("div")
+
+    autorTag.innerHTML = autor
+    autorTag.setAttribute('class', 'autor')
+
+    avatar.setAttribute('src', avatarURL)
+    avatar.setAttribute('class', 'avatar')
+
+    msgTrescWindow.innerHTML = urlify(msg)
+    msgTrescWindow.setAttribute('class', 'wraptext')
+
+    autorCont.appendChild(avatar)
+    autorCont.appendChild(autorTag)
+    msgWindow.appendChild(autorCont)
+    msgWindow.appendChild(msgTrescWindow)
+
+    autorCont.setAttribute('class', 'autorCont')
+    msgWindow.setAttribute('class', 'msgWindow')
+
+    msgCont.appendChild(msgWindow)
 }
 
 function updateUser() {
     socket.emit('new-user-update', regEmail.value, regUser.value)
-    if (/\b[\w.!#$%&’*+\/=?^`{|}~-]+@[\w-]+(?:\.[\w-]+)\b/.test(regEmail.value) === false) {
-        regEmailErr.innerHTML = 'Niepoprawny adres email!'
-    }
-    else {
-        regEmailErr.innerHTML = "";
-    }
+}
+
+function checkImg(text) {
+    return /\.(gif|jpe?g|tiff|png|webp|bmp)/i.test(text);
+}
+
+function urlify(text) {
+    let urlRegex = /(https?:\/\/[^\s]+)/gi;
+    return text.replace(urlRegex, function (url) {
+        if (checkImg(url))
+            return (
+                '<a target="_blank" class="wraptext" href="' + url + '">' + url + '</a><img src="' + url + '"><span class="wraptext">'
+            );
+        
+        return '<a target="_blank" class="wraptext" href="' + url + '">' + url + '</a><span class="wraptext">';
+    })
 }
