@@ -9,3 +9,6 @@ Postanowiłem, że oprę się na mySQL bo dobrze znam te środowisko.
 Jest to projekt działający na frameworku Node.js z paczkami: mysql, ejs, express, multer, socket.io i dotenv.
 
 Mam nadzieję, że uda mi się wyrobić do środy...
+
+EDIT:
+Udało mi się wyrobić! Fakt że muszę jeszcze doszlifować parę rzeczy, ale ogólnie działa!
