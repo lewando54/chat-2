@@ -46,15 +46,15 @@ app.use(express.static("public"));
 app.use("/uploads", express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+    })
 );
-app.use(function (req, res, next) {
-  res.locals.user = req.session.user;
-  next();
+app.use(function(req, res, next) {
+    res.locals.user = req.session.user;
+    next();
 });
 
 //przechwytywanie żądań socket.io i odpowiedzi
@@ -98,17 +98,17 @@ io.on('connection', socket => {
                     console.log("email nieistnieje");
                 }
                 if (result[0].login === login) {
-                  socket.emit("duplicate", "login");
-                  console.log("login istnieje");
+                    socket.emit("duplicate", "login");
+                    console.log("login istnieje");
                 } else {
-                  socket.emit("unduplicate", "login");
-                  console.log("login nieistnieje");
+                    socket.emit("unduplicate", "login");
+                    console.log("login nieistnieje");
                 }
                 if (/\b[\w.!#$%&’*+\/=?^`{|}~-]+@[\w-]+(?:\.[\w-]+)\b/.test(email) === false && email != '') {
                     socket.emit("duplicate", "emailErr")
                 }
                 if (result[0].login === login && result[0].email == email)
-                  userIstnieje = true;
+                    userIstnieje = true;
             } else {
                 userIstnieje = false;
             }
@@ -123,20 +123,20 @@ io.on('connection', socket => {
     socket.on('new-msg', (roomName, user, msg) => {
         console.log(sess.roomName)
         con.query(`INSERT INTO tmsgs(id_autor, id_room, tresc) VALUES( (SELECT user_id FROM tusers WHERE login='${user}'), (SELECT room_id FROM trooms WHERE room_name='${roomName}'), '${msg}')`)
-        con.query(`SELECT * FROM (SELECT msg_id, login, avatar_url, id_room, tresc FROM tmsgs, tusers WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') AND id_autor=user_id ORDER BY msg_id DESC LIMIT 20)Var1 ORDER BY msg_id ASC`,(err, result) => {
+        con.query(`SELECT * FROM (SELECT msg_id, login, avatar_url, id_room, tresc FROM tmsgs, tusers WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') AND id_autor=user_id ORDER BY msg_id DESC LIMIT 30)Var1 ORDER BY msg_id ASC`, (err, result) => {
             io.in(roomName).emit("msgs-update-client", result)
         })
     })
 
     socket.on('msgs-update', (roomName) => {
-        con.query(`SELECT * FROM (SELECT msg_id, login, avatar_url, id_room, tresc FROM tmsgs, tusers WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') AND id_autor=user_id ORDER BY msg_id DESC LIMIT 20)Var1 ORDER BY msg_id ASC`, (err, result) => {
+        con.query(`SELECT * FROM (SELECT msg_id, login, avatar_url, id_room, tresc FROM tmsgs, tusers WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') AND id_autor=user_id ORDER BY msg_id DESC LIMIT 30)Var1 ORDER BY msg_id ASC`, (err, result) => {
             io.in(roomName).emit("msgs-update-client", result);
         })
     })
 
     socket.on('user-disconnect', (roomName, user) => {
         con.query(`INSERT INTO tmsgs(id_autor, id_room, tresc) VALUES( 1, (SELECT room_id FROM trooms WHERE room_name='${roomName}'), '${user} opuścił/a czat!')`)
-        con.query(`SELECT * FROM (SELECT msg_id, login, avatar_url, id_room, tresc FROM tmsgs, tusers WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') AND id_autor=user_id ORDER BY msg_id DESC LIMIT 20)Var1 ORDER BY msg_id ASC`,(err, result) => {
+        con.query(`SELECT * FROM (SELECT msg_id, login, avatar_url, id_room, tresc FROM tmsgs, tusers WHERE id_room=(SELECT room_id FROM trooms WHERE room_name='${roomName}') AND id_autor=user_id ORDER BY msg_id DESC LIMIT 20)Var1 ORDER BY msg_id ASC`, (err, result) => {
             io.in(roomName).emit("msgs-update-client", result)
         })
         socket.leave(roomName)
@@ -164,8 +164,8 @@ app.get('/login', (req, res) => {
 })
 
 app.get("/logout", (req, res) => {
-  req.session.destroy()
-  res.redirect("/")
+    req.session.destroy()
+    res.redirect("/")
 });
 
 app.post('/register', upload.single('avatar'), (req, res) => {
@@ -187,19 +187,16 @@ app.post('/login', (req, res) => {
     let istnieje = false
     con.query(`SELECT * FROM tusers WHERE login='${req.body.login}'`, (err, result) => {
         if (result.length > 0) {
-            if (result[0].login === req.body.login)
-            {
+            if (result[0].login === req.body.login) {
                 if (!sess.user && req.body.password === result[0].pass)
                     sess.user = req.body.login
                 else if (req.body.password != result[0].pass) {
                     sess.destroy();
                     return res.render("login_failed.ejs")
-                }    
-                else
+                } else
                     sess.destroy();
                 return res.redirect('/')
-            }
-            else {
+            } else {
                 return res.redirect('/login')
             }
         } else {
@@ -230,4 +227,4 @@ app.get('/:room', (req, res) => {
     })
 })
 
-server.listen(process.env.PORT || 3000)
+server.listen(process.env.PORT || 80)

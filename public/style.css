@@ -1,4 +1,5 @@
-html, body{
+html,
+body {
     margin: 0;
     display: flex;
     height: 100%;
@@ -8,28 +9,28 @@ html, body{
     color: white;
 }
 
-header{
+header {
     display: flex;
     justify-content: space-around;
     width: 100%;
     background-color: rgb(84, 90, 94);
 }
 
-h1{
+h1 {
     white-space: nowrap;
     text-transform: uppercase;
     color: white;
     text-shadow: 5px 5px 10px #292020;
 }
 
-h3{
+h3 {
     white-space: nowrap;
     text-transform: uppercase;
     color: white;
     text-shadow: 5px 5px 10px #292020;
 }
 
-nav{
+nav {
     width: 40%;
     display: flex;
     flex-direction: row;
@@ -38,26 +39,31 @@ nav{
     text-align: center;
 }
 
-#burger{
+#burger {
     padding-top: 7px;
-    background-color: blue;
+    background-color: rgb(129, 135, 139);
     display: none;
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px #0f0f0f;
 }
 
-.line{
+#burger:hover {
+    background-color: #292020;
+}
 
+.line {
     margin-bottom: 7px;
     margin-left: 7px;
     margin-right: 7px;
     width: 40px;
     height: 7px;
-    background-color: brown;
+    background-color: rgb(66, 56, 56);
 }
 
-main{
+main {
     display: flex;
     height: 100%;
     background-color: rgb(56, 61, 71);
@@ -65,7 +71,7 @@ main{
     flex-direction: column;
 }
 
-.container{
+.container {
     width: 100%;
     flex-grow: 10;
     max-height: 80vh;
@@ -77,41 +83,41 @@ main{
     background-color: rgb(56, 61, 71);
 }
 
-img{
+img {
     max-width: 40%;
 }
 
-a{
+a {
     color: bisque;
     text-decoration: none;
 }
 
-a:hover{
+a:hover {
     text-decoration: underline;
 }
 
-.msgWindow{
+.msgWindow {
     padding-left: 40px;
     padding-right: 40px;
     margin-bottom: 10px;
 }
 
-.wraptext{
+.wraptext {
     max-width: 100%;
-    word-wrap:break-word !important;
+    word-wrap: break-word !important;
     display: block !important;
 }
 
-.text{
+.text {
     text-shadow: 5px 5px 10px #292020;
 }
 
-.autorCont{
+.autorCont {
     display: flex;
     align-items: center;
 }
 
-.menu{
+.menu {
     text-decoration: none !important;
     color: white;
     transition: transform 0.2s, color 0.2s;
@@ -120,13 +126,13 @@ a:hover{
     text-shadow: 5px 5px 10px #292020;
 }
 
-.menu:hover{
+.menu:hover {
     cursor: pointer;
     transform: scale(1.2);
-    color:  rgb(122, 176, 192);
+    color: rgb(122, 176, 192);
 }
 
-.enterRoom{
+.enterRoom {
     background-color: #445258;
     padding: 10px;
     color: rgb(255, 255, 255);
@@ -136,23 +142,23 @@ a:hover{
     border-radius: 10px 0 10px 0;
 }
 
-.enterRoom:hover{
+.enterRoom:hover {
     background-color: rgb(255, 255, 255);
     color: #292929;
     text-decoration: none;
 }
 
-.avatar{
+.avatar {
     width: 40px;
     border-radius: 50px;
     margin-right: 20px;
 }
 
-.autor{
+.autor {
     font-weight: bolder;
 }
 
-.roomWindow{
+.roomWindow {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -164,7 +170,7 @@ a:hover{
     border-bottom: 2px solid grey;
 }
 
-.creativeForm{
+.creativeForm {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -174,117 +180,115 @@ a:hover{
     background-color: rgb(84, 90, 94);
 }
 
-input{
+input {
     color: white;
 }
 
-input[type="text"]{
+input[type="text"] {
     border: 2px solid white;
     background-color: rgb(56, 61, 71);
     height: 30px;
     font-size: larger;
 }
 
-input[type="password"]{
+input[type="password"] {
     border: 2px solid white;
     background-color: rgb(56, 61, 71) !important;
     height: 30px;
     font-size: larger;
 }
 
-input[type="submit"]{
+input[type="submit"] {
     border: 2px solid white;
     background-color: rgb(56, 61, 71);
     font-size: larger;
 }
 
-
-#navSeparator{
+#navSeparator {
     display: flex;
     justify-content: center;
     width: 40%;
     align-items: center;
 }
 
-.userForm{
+.userForm {
     display: flex;
     flex-direction: column;
     background-color: #4e5558;
     padding: 40px;
 }
 
-.formSep{
+.formSep {
     margin-bottom: 20px;
 }
 
-.center{
+.center {
     display: flex;
     justify-content: center;
 }
 
-input{display: block;}
-
-label{display: block;}
-
-#logForm>*{
-margin-bottom: 20px;
+input {
+    display: block;
 }
 
-#msgInput{
+label {
+    display: block;
+}
+
+#logForm>* {
+    margin-bottom: 20px;
+}
+
+#msgInput {
     width: 100%;
 }
 
-#msgInputs{
+#msgInputs {
     display: flex;
     width: 80%;
 }
 
-#roomInputs{
+#roomInputs {
     display: flex;
     margin-bottom: 19px;
 }
 
-.userDataPage{
+.userDataPage {
     justify-content: center;
     align-items: center;
 }
 
-@media screen and (max-width: 1000px){
-    header{
+@media screen and (max-width: 1000px) {
+    header {
         flex-direction: column;
         align-items: center;
     }
-
-    nav{
+    nav {
         display: none;
         position: fixed;
         top: 67px;
         width: 100%;
         background-color: rgb(67, 72, 75);
     }
-
-    #navSeparator{
+    #navSeparator {
         width: 100%;
         justify-content: space-around;
     }
-
-    img{
+    img {
         max-width: 100%;
     }
-
-    #burger{
+    #burger {
         display: flex;
         justify-content: center;
         align-items: center;
     }
 }
 
-@media screen and (max-width: 1000px) and (orientation: landscape){
-    .creativeForm{
+@media screen and (max-width: 1000px) and (orientation: landscape) {
+    .creativeForm {
         min-height: 20%;
     }
-
-    img{
+    img {
         max-width: 50%;
     }
 }

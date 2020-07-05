@@ -44,11 +44,11 @@ if (roomCont != undefined) {
     //utworzenie nowego pokoju
     if (roomForm != undefined) {
         roomForm.addEventListener('submit', e => {
-        e.preventDefault()
-        socket.emit('new-room-update', newRoomName.value)
+            e.preventDefault()
+            socket.emit('new-room-update', newRoomName.value)
         })
     }
-    
+
 
     //aktualizacja listy pokoi z danymi z serwera
     socket.on('update', data => {
@@ -76,7 +76,7 @@ if (msgCont != undefined) {
     })
 
     socket.on('msgs-update-client', data => {
-        msgCont.innerHTML = "" 
+        msgCont.innerHTML = ""
         Object.keys(data).forEach((key) => {
             var row = data[key];
             appendMsg(row.tresc, row.login, row.avatar_url);
@@ -88,7 +88,7 @@ if (msgCont != undefined) {
     })
 
     burger.addEventListener("click", e => {
-        if(nav.style.display === 'none')
+        if (nav.style.display === 'none')
             nav.style.display = 'flex'
         else
             nav.style.display = 'none'
@@ -176,14 +176,24 @@ function checkImg(text) {
     return /\.(gif|jpe?g|tiff|png|webp|bmp)/i.test(text);
 }
 
+function checkYT(text) {
+    return /(youtube.com)|(youtu.be)/m.test(text);
+}
+
 function urlify(text) {
     let urlRegex = /(https?:\/\/[^\s]+)/gi;
-    return text.replace(urlRegex, function (url) {
+    return text.replace(urlRegex, function(url) {
         if (checkImg(url))
             return (
                 '<a target="_blank" class="wraptext" href="' + url + '">' + url + '</a><img src="' + url + '"><span class="wraptext">'
             );
-        
+        if (checkYT(url)) {
+            url = url.replace(/watch[?]v=/m, "")
+            return (
+                '<a target="_blank" class="wraptext" href="' + url + '">' + url + '</a><iframe width="420" height="235" src="' + url.replace(/(youtube.com)|(youtu.be)/m, "youtube.com/embed") + '"></iframe><span class="wraptext">'
+            );
+        }
+
         return '<a target="_blank" class="wraptext" href="' + url + '">' + url + '</a><span class="wraptext">';
     })
 }
