@@ -14,7 +14,7 @@
     "author": "lewando54",
     "license": "ISC",
     "devDependencies": {
-        "nodemon": "^2.0.4"
+        "nodemon": "^2.0.20"
     },
     "dependencies": {
         "dotenv": "^8.2.0",
